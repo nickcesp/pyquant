@@ -1,5 +1,5 @@
 from edhec_data import get_ind_returns, get_total_market_index_returns
-
+from edhec_risk_kit import annualize_rets, annualize_vol, sharpe_ratio, drawdown, skewness, kurtosis, var_gaussian, var_cond_historic
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -136,7 +136,7 @@ def summary_stats(r, riskfree_rate=0.03):
     skew = r.aggregate(skewness)
     kurt = r.aggregate(kurtosis)
     cf_var5 = r.aggregate(var_gaussian, modified=True)
-    hist_cvar5 = r.aggregate(cvar_historic)
+    hist_cvar5 = r.aggregate(var_cond_historic)
     return pd.DataFrame({
         "Annualized Return": ann_r,
         "Annualized Vol": ann_vol,
