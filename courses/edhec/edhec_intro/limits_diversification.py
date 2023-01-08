@@ -1,6 +1,6 @@
 """ Lab 118: Limits of Diversification """
 from edhec_data import get_ind_size, get_ind_nfirms, get_ind_returns
-import edhec_risk_kit as erk
+from courses.edhec import edhec_risk_kit as erk
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':

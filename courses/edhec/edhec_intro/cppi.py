@@ -1,5 +1,5 @@
 from edhec_data import get_ind_returns, get_total_market_index_returns
-from edhec_risk_kit import annualize_rets, annualize_vol, sharpe_ratio, drawdown, skewness, kurtosis, var_gaussian, var_cond_historic
+from courses.edhec.edhec_risk_kit import annualize_rets, annualize_vol, sharpe_ratio, drawdown, skewness, kurtosis, var_gaussian, var_cond_historic
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt

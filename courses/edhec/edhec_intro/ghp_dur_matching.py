@@ -1,6 +1,4 @@
-import numpy as np
-import pandas as pd
-import edhec_risk_kit as erk
+from courses.edhec import edhec_risk_kit as erk
 
 if __name__ == '__main__':
 

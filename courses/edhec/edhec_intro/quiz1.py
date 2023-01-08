@@ -1,6 +1,6 @@
 import pandas as pd
 
-from edhec_risk_kit import get_ffme_returns
+from courses.edhec.edhec_risk_kit import get_ffme_returns
 
 def get_returns(r: pd.DataFrame or pd.Series):
     total_return = (r + 1).cumprod().iloc[-1]

@@ -1,10 +1,5 @@
-import csv
-import numpy as np
 import pandas as pd
 import statsmodels.api as sm
-from sklearn import linear_model
-import matplotlib.pyplot as plt
-import patsy
 from scipy.stats import chi2  # for sig testing
 
 def mixed_model(da):

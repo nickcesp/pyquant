@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import math
+import statsmodels.api as sm
 from scipy.stats import norm, jarque_bera
 from scipy.optimize import minimize
 import matplotlib.pyplot as plt
@@ -296,7 +297,7 @@ def get_ffme_returns(cols=('Lo 10', 'Hi 10'), rn_cols=('SmallCap', 'LargeCap')):
     """
     Load the Fama-French Dataset for the returns of the Top and Bottom Deciles by MarketCap
     """
-    me_m = pd.read_csv("resources/Portfolios_Formed_on_ME_monthly_EW.csv",
+    me_m = pd.read_csv("edhec_intro/resources/Portfolios_Formed_on_ME_monthly_EW.csv",
                        header=0, index_col=0, na_values=-99.99)
     if cols is not None:
         me_m = me_m[cols]
@@ -492,6 +493,14 @@ def plot_ef2(n_points, er, cov):
     return ef.plot.line(x="Volatility", y="Returns", style=".-", title="2-Asset Efficient Frontier")
 
 
+def portfolio_tracking_error(weights, ref_r, bb_r):
+    """
+    returns the tracking error between the reference returns
+    and a portfolio of building block returns held with given weights
+    """
+    return tracking_error(ref_r, (weights*bb_r).sum(axis=1))
+
+
 def port_returns(weights: pd.Series or pd.DataFrame,
                  returns: pd.Series or pd.DataFrame):
     """
@@ -517,6 +526,23 @@ def pv(flows, r):
     dates = flows.index
     discounts = discount(dates, r)
     return discounts.multiply(flows, axis='rows').sum()
+
+
+def regress(dependent_variable, explanatory_variables, alpha=True):
+    """
+    Runs a linear regression to decompose the dependent variable into the explanatory variables
+    returns an object of type statsmodel's RegressionResults on which you can call
+       .summary() to print a full summary
+       .params for the coefficients
+       .tvalues and .pvalues for the significance levels
+       .rsquared_adj and .rsquared for quality of fit
+    """
+    if alpha:
+        explanatory_variables = explanatory_variables.copy()
+        explanatory_variables["Alpha"] = 1
+
+    lm = sm.OLS(dependent_variable, explanatory_variables).fit()
+    return lm
 
 
 def semidev_est(r: pd.Series or pd.DataFrame):
@@ -567,6 +593,27 @@ def skewness(r: pd.Series or pd.DataFrame):
     sigma_r = r.std(ddof=0)
     exp = (demeaned_r**3).mean()
     return exp / (sigma_r**3)
+
+
+def style_analysis(dependent_variable, explanatory_variables):
+    """
+    Returns the optimal weights that minimizes the Tracking error between
+    a portfolio of the explanatory variables and the dependent variable
+    """
+    n = explanatory_variables.shape[1]
+    init_guess = np.repeat(1/n, n)
+    bounds = ((0.0, 1.0),) * n # an N-tuple of 2-tuples!
+    # construct the constraints
+    weights_sum_to_1 = {'type': 'eq',
+                        'fun': lambda weights: np.sum(weights) - 1
+    }
+    solution = minimize(portfolio_tracking_error, init_guess,
+                       args=(dependent_variable, explanatory_variables,), method='SLSQP',
+                       options={'disp': False},
+                       constraints=(weights_sum_to_1,),
+                       bounds=bounds)
+    weights = pd.Series(solution.x, index=explanatory_variables.columns)
+    return weights
 
 
 def summary_stats(r, riskfree_rate=0.03):
@@ -624,6 +671,13 @@ def terminal_stats(rets, floor = 0.8, cap=np.inf, name="Stats"):
         "e_surplus": e_surplus
     }, orient="index", columns=[name])
     return sum_stats
+
+
+def tracking_error(r_a, r_b):
+    """
+    Returns the Tracking Error between the two return series
+    """
+    return np.sqrt(((r_a - r_b)**2).sum())
 
 
 def var_cond_historic(r, level=5):

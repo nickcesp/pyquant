@@ -1,5 +1,5 @@
-import edhec_risk_kit as erk
-from courses.edhec_intro.edhec_data import get_ind_returns, get_hfi_data
+from courses.edhec import edhec_risk_kit as erk
+from courses.edhec.edhec_intro.edhec_data import get_ind_returns, get_hfi_data
 
 if __name__ == "__main__":
     df_hfi = get_hfi_data()

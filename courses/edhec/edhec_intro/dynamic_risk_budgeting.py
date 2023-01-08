@@ -1,4 +1,4 @@
-import edhec_risk_kit as erk
+from courses.edhec import edhec_risk_kit as erk
 import pandas as pd
 
 

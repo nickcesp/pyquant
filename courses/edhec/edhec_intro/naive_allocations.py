@@ -1,5 +1,5 @@
 import pandas as pd
-import edhec_risk_kit as erk
+from courses.edhec import edhec_risk_kit as erk
 
 import seaborn as sns
 import matplotlib.pyplot as plt

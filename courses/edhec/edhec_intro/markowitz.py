@@ -1,9 +1,9 @@
 import pandas as pd
 import numpy as np
-import edhec_risk_kit as erk
+from courses.edhec import edhec_risk_kit as erk
 import matplotlib.pyplot as plt
 import seaborn as sns
-from scipy.optimize import minimize
+
 
 def get_ind_returns():
     ind = pd.read_csv("resources/ind30_m_vw_rets.csv", header=0, index_col=0) / 100

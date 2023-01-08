@@ -1,6 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from edhec_risk_kit import ann_to_inst, inst_to_ann
+from courses.edhec.edhec_risk_kit import ann_to_inst, inst_to_ann
 import numpy as np
 
 import math
